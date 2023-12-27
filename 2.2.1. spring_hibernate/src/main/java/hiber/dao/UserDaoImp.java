@@ -1,7 +1,11 @@
 package hiber.dao;
 
+import hiber.model.Car;
 import hiber.model.User;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +30,18 @@ public class UserDaoImp implements UserDao {
       return query.getResultList();
    }
 
+   @Override
+   @SuppressWarnings("unchecked")
+   public List <User> getUserDao(String model, int series) {
+
+      TypedQuery<User> query;
+      try (Session session = sessionFactory.openSession()) {
+         query = session.createQuery("from User u where u.car.model=:mosel and u.car.series=:series")
+                 .setParameter("mosel", model).setParameter("series", series);
+         return query.getResultList();
+      } catch (Exception e) {
+         throw new RuntimeException("Нет такого юзера " + e);
+      }
+
+   }
 }
