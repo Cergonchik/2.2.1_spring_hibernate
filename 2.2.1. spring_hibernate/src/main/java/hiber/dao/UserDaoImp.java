@@ -32,16 +32,13 @@ public class UserDaoImp implements UserDao {
 
    @Override
    @SuppressWarnings("unchecked")
-   public List <User> getUserDao(String model, int series) {
+   public List <User> getUserCarByModelAndSeries(String model, int series) {
 
       TypedQuery<User> query;
-      try (Session session = sessionFactory.openSession()) {
+      Session session = sessionFactory.openSession();
          query = session.createQuery("from User u where u.car.model=:mosel and u.car.series=:series")
                  .setParameter("mosel", model).setParameter("series", series);
          return query.getResultList();
-      } catch (Exception e) {
-         throw new RuntimeException("Нет такого юзера " + e);
-      }
 
    }
 }
