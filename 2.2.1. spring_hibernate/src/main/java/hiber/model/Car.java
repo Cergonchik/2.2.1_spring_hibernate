@@ -1,13 +1,14 @@
 package hiber.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
 public class Car {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "car_id")
     private long id;
     @Column(name = "model")
@@ -58,5 +59,29 @@ public class Car {
     public void setSeries(int series) {
         this.series = series;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Car)) return false;
+        final Car car = (Car) o;
+        if (!Objects.equals(car.getId(), getId())) {
+            return false;
+        }
+        if (!Objects.equals(car.getModel(), getModel())) {
+            return false;
+        }
+        if (!Objects.equals(car.getSeries(), getSeries())) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (3 * getId() + 7 * Integer.hashCode(getSeries()) +
+                getModel().hashCode()) >> 3;
+    }
+
 
 }

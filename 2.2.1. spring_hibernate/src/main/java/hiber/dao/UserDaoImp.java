@@ -10,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDao {
 
+
+   private final SessionFactory sessionFactory;
    @Autowired
-   private SessionFactory sessionFactory;
+   public UserDaoImp(SessionFactory sessionFactory) {
+      this.sessionFactory = sessionFactory;
+   }
 
    @Override
    public void add(User user) {
@@ -35,10 +40,10 @@ public class UserDaoImp implements UserDao {
    public List <User> getUserCarByModelAndSeries(String model, int series) {
 
       TypedQuery<User> query;
-      Session session = sessionFactory.openSession();
-         query = session.createQuery("from User u where u.car.model=:mosel and u.car.series=:series")
-                 .setParameter("mosel", model).setParameter("series", series);
-         return query.getResultList();
+       Session session = sessionFactory.openSession();
+       query = session.createQuery("from User u where u.car.model=:mosel and u.car.series=:series")
+               .setParameter("mosel", model).setParameter("series", series);
+       return query.getResultList();
 
    }
 }
